@@ -27,5 +27,10 @@ public class ProUtils {
         System.out.println(msg);
     }
 
+    public void logArgs(String... args) {
+        for (String s : args)
+            System.out.println(s);
+    }
+
 
 }

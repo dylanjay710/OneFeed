@@ -59,4 +59,12 @@
         android:hint="@string/confirm_email_placeholder"
         android:layout_below="@+id/email_input_box"
     />
+
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next"
+        android:layout_below="@+id/confirm_email_input_box"
+        android:onClick="nextClick"/>
 </android.widget.RelativeLayout>
