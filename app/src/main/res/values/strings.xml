@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">OneFeed</string>
+    <string name="welcome_message">Welcome To OneFeed. Keep track of all social networks as if they were one</string>
+    <string name="onefeed_button">Create a OneFeed</string>
 </resources>

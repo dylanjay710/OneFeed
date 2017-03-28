@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="Welcome To OneFeed. Keep track of all social networks as if they were one"
+        android:text="@string/welcome_message"
         android:background="#000000"
         android:textColor="#ffffff" />
 
@@ -34,6 +34,7 @@
         android:layout_alignBottom="@+id/txtWelcome"
         android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
-        android:text="hi"
+        android:text="@string/onefeed_button"
+        android:onClick="oneFeedClick"
         />
 </android.widget.RelativeLayout>
