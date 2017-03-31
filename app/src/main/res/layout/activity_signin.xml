@@ -45,6 +45,6 @@
         android:layout_height="wrap_content"
         android:text="login"
         android:background="@color/common_google_signin_btn_text_dark_default"
-
+        android:onClick="login"
         />
 </android.widget.RelativeLayout>

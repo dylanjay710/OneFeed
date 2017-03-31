@@ -23,7 +23,6 @@ public class CreateAccount extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
-        System.out.println("On creation method of Create Account page");
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
     }
@@ -56,7 +55,7 @@ public class CreateAccount extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), UserProfile.class);
                 startActivity(intent);
             } else {
-                Toast.makeText(this, "Failed to validate on server", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Form Invalid", Toast.LENGTH_LONG).show();
             }
         }
     }
