@@ -1,6 +1,7 @@
 package com.example.hexinary.onefeedv1;
 
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,9 +23,11 @@ public class SigninActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
-    public void login(View v) {
+    public void loginUser(View v) {
         EditText etUsername = (EditText)findViewById(R.id.username_signin);
         String username = etUsername.getText().toString();
 
@@ -53,10 +56,11 @@ public class SigninActivity extends AppCompatActivity {
             dataOutputStream.close();
 
             BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null)
-                ProUtils.getInstance().log(inputLine.toString());
-            in.close();
+            String inputLine = in.readLine();
+            ProUtils.getInstance().log(inputLine);
+//            while ((inputLine = in.readLine()) != null)
+//                ProUtils.getInstance().log(inputLine.toString());
+//            in.close();
 
             if (inputLine.equals("login,true")) {
                 return true;

@@ -43,8 +43,8 @@
         android:layout_below="@+id/password_signin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="login"
-        android:background="@color/common_google_signin_btn_text_dark_default"
-        android:onClick="login"
+        android:text="@string/login_button_text"
+        android:onClick="loginUser"
         />
+
 </android.widget.RelativeLayout>

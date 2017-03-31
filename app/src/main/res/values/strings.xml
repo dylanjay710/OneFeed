@@ -9,5 +9,6 @@
     <string name="email_placeholder">email</string>
     <string name="confirm_email_placeholder">confirm email</string>
     <string name="next">Next</string>
+    <string name="login_button_text">login</string>
 
 </resources>
