@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "889659297667",
+    "project_id": "djcodes-onefeed-backend"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889659297667:android:9f6201e10fbddc7c",
+        "android_client_info": {
+          "package_name": "com.djcodes.onefeed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "889659297667-rn8im17cs8h34kfefbmrr0plc54mu9mu.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "889659297667-rp7jmpavg8v0jatmjqo0ddh462p7v874.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.djcodes.onefeed",
+            "certificate_hash": "e827d7fbf0749964b69e48894876b541bac7c63b"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcnvzlZdmu1bWILHcujaV8YVuDxLD8DSI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

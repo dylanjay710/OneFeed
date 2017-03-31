@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hexinary.onefeedv1.com.example.hexinary.onefeed.UserProfile">
+
+    <com.example.hexinary.onefeedv1.GoogleButton
+        android:id="@+id/google_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="googleAuthorize"
+        android:background="@mipmap/google_image"
+        />
+
+    <com.example.hexinary.onefeedv1.FacebookButton
+        android:id="@+id/facebook_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="facebookAuthorize"
+        android:background="@mipmap/facebook_image"
+        android:layout_below="@+id/google_button"
+        />
+
+    <com.example.hexinary.onefeedv1.InstagramButton
+        android:id="@+id/instagram_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="instagramAuthorize"
+        android:background="@mipmap/instagram_image"
+        android:layout_below="@+id/facebook_button"
+        />
+
+    <com.example.hexinary.onefeedv1.TwitterButton
+        android:id="@+id/twitter_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="twitterAuthorize"
+        android:background="@mipmap/twitter_image"
+        android:layout_below="@+id/instagram_button"
+        />
+
+</android.widget.RelativeLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hexinary.onefeedv1.com.example.hexinary.onefeed.CreateAccount">
+
+    <TextView
+        android:id="@+id/create_account_page_title"
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/create_account_header" />
+
+    <!-- Dj: username input view -->
+    <EditText
+        android:id="@+id/username_input_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:hint="@string/username_placeholder"
+        android:layout_below="@+id/create_account_page_title"
+        />
+
+    <!-- Dj: password input view -->
+    <EditText
+        android:id="@+id/password_input_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/password_placeholder"
+        android:layout_below="@+id/username_input_box"
+        />
+
+    <!-- Dj: confirm password input view-->
+    <EditText
+        android:id="@+id/confirm_password_input_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/confirm_password_placeholder"
+        android:layout_below="@+id/password_input_box"
+        />
+
+    <!--Dj: email input view -->
+    <EditText
+        android:id="@+id/email_input_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/email_placeholder"
+        android:layout_below="@+id/confirm_password_input_box"
+        />
+
+    <!-- DJ: confirm email input view -->
+    <EditText
+        android:id="@+id/confirm_email_input_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/confirm_email_placeholder"
+        android:layout_below="@+id/email_input_box"
+    />
+
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next"
+        android:layout_below="@+id/confirm_email_input_box"
+        android:onClick="nextClick"/>
+</android.widget.RelativeLayout>

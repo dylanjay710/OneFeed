@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">OneFeed</string>
+    <string name="welcome_message">Welcome To OneFeed. Keep track of all social networks as if they were one</string>
+    <string name="onefeed_button">Create a OneFeed</string>
+    <string name="create_account_header">Create an account to utilize the technology of the future</string>
+    <string name="username_placeholder">username</string>
+    <string name="password_placeholder">password</string>
+    <string name="confirm_password_placeholder">confirm password</string>
+    <string name="email_placeholder">email</string>
+    <string name="confirm_email_placeholder">confirm email</string>
+    <string name="next">Next</string>
+
+</resources>
