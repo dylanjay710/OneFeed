@@ -10,5 +10,6 @@
     <string name="confirm_email_placeholder">confirm email</string>
     <string name="next">Next</string>
     <string name="login_button_text">login</string>
+    <string name="profile_header_text">Load in your social networks</string>
 
 </resources>
