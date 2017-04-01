@@ -1,67 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_profile_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hexinary.onefeedv1.UserProfile">
+    android:orientation="vertical"
+    android:weightSum="4"
+    tools:context=".UserProfile">
 
-    <TextView
-        android:id="@+id/profile_header_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/profile_header_text"
-        android:textAlignment="center"
-        />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_provided_button"
-        android:layout_below="@+id/profile_header_text"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"/>
-    <!--<com.example.hexinary.onefeedv1.GoogleButton-->
-        <!--android:id="@+id/google_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:onClick="googleAuthorize"-->
-        <!--android:background="@mipmap/google_image"-->
-        <!--android:layout_below="@+id/profile_header_text"-->
-        <!--android:layout_marginTop="10dp"-->
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_provided_signin_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible"
+            />
 
-        <!--/>-->
+        <Button
+            android:id="@+id/google_provided_signout_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="sign out"
+            />
 
-    <com.example.hexinary.onefeedv1.FacebookButton
-        android:layout_centerHorizontal="true"
-        android:id="@+id/facebook_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="facebookAuthorize"
-        android:background="@mipmap/facebook_image"
-        android:layout_below="@+id/google_provided_button"
-        />
+        <Button
+            android:id="@+id/disconnect_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="disconnect"
+            />
 
-    <com.example.hexinary.onefeedv1.InstagramButton
-        android:layout_centerHorizontal="true"
-        android:id="@+id/instagram_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="instagramAuthorize"
-        android:background="@mipmap/instagram_image"
-        android:layout_below="@+id/facebook_button"
-        />
-
-    <com.example.hexinary.onefeedv1.TwitterButton
-        android:layout_centerHorizontal="true"
-        android:id="@+id/twitter_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="twitterAuthorize"
-        android:background="@mipmap/twitter_image"
-        android:layout_below="@+id/instagram_button"
-        />
-
-</android.widget.RelativeLayout>
+    </RelativeLayout>
