@@ -2,6 +2,7 @@ package com.example.hexinary.onefeedv1;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
@@ -13,6 +14,8 @@ class GoogleHandler {
     private UserProfile userProfileInstance;
     private GoogleSignInOptions gso;
     private GoogleApiClient mobileGoogleApiClient;
+    private static final String TAG = "SigninActivity";
+    private static final int RC_SIGN_IN = 9001;
 
     public GoogleHandler(UserProfile up) {
 
@@ -46,5 +49,36 @@ class GoogleHandler {
 
         }
     }
+
+    public void configureGoogleSignInButton() {
+
+        /* START customize_button Set the dimensions of the sign-in button. */
+        SignInButton signInButton = (SignInButton) this.userProfileInstance.findViewById(R.id.google_provided_signin_button);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
+
+    }
+
+    /* Getters and Setters */
+
+    public GoogleApiClient getMobileGoogleApiClient() {
+
+        return this.mobileGoogleApiClient;
+
+    }
+
+    public int getRcSignIn() {
+
+        return this.RC_SIGN_IN;
+
+    }
+
+    public String getTag() {
+
+        return this.getTag();
+
+    }
+
+
+
 
 }

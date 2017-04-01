@@ -23,9 +23,6 @@ import com.google.android.gms.common.api.Status;
 public class UserProfile extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     /* Declare components used in the user profile */
-    private static final String TAG = "SignInActivity";
-    private static final int RC_SIGN_IN = 9001;
-    private GoogleApiClient mGoogleApiClient;
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
 
@@ -46,18 +43,22 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
         setContentView(R.layout.activity_user_profile);
 
         /* Google Handler Setup */
+        configureGoogle();
+
+    }
+
+    public void configureGoogle() {
         this.googleHandler.setOnClicks();
         this.googleHandler.configureGoogleSignInOptions();
         this.googleHandler.configureMobileGoogleApiClient();
-        this.googleHandler.configureSignInButton();
-
+        this.googleHandler.configureGoogleSignInButton();
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(this.googleHandler.getMobileGoogleApiClient());
 
         if (opr.isDone()) {
 
@@ -98,7 +99,7 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
 
     /* Start signIn */
     private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(this.googleHandler.getMobileGoogleApiClient());
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
