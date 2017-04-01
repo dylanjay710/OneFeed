@@ -2,19 +2,15 @@ package com.example.hexinary.onefeedv1;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -23,6 +19,7 @@ import com.google.android.gms.common.api.Status;
 public class UserProfile extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     /* Declare components used in the user profile */
+
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
 
@@ -82,6 +79,7 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
                 }
 
             });
+
         }
     }
 
@@ -91,7 +89,7 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == 9001) {
+        if (requestCode == this.googleHandler.getRcSignIn()) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
@@ -99,14 +97,16 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
 
     /* Start signIn */
     private void signIn() {
+
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(this.googleHandler.getMobileGoogleApiClient());
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, this.googleHandler.getRcSignIn());
+
     }
 
     /* Start signOut */
     private void signOut() {
 
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+        Auth.GoogleSignInApi.signOut(this.googleHandler.getMobileGoogleApiClient()).setResultCallback(
 
                 new ResultCallback<Status>() {
 
@@ -124,7 +124,7 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
     /* Start revokeAccess */
     private void revokeAccess() {
 
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+        Auth.GoogleSignInApi.revokeAccess(this.googleHandler.getMobileGoogleApiClient()).setResultCallback(
 
                 new ResultCallback<Status>() {
 
@@ -141,11 +141,12 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
     /* Start handleSignInResult */
     private void handleSignInResult(GoogleSignInResult result) {
 
+        /* String concatenation means implicit casting ot booleans! */
         ProUtils.getInstance().log("Login Success: " + result.isSuccess());
 
         if (result.isSuccess()) {
 
-            // Signed in successfully, show authenticated UI.
+            /* Signed in successfully, show authenticated UI. */
             GoogleSignInAccount acct = result.getSignInAccount();
             String displayName = acct.getDisplayName();
             ProUtils.getInstance().log(displayName);
@@ -163,6 +164,7 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage("loading...");
             mProgressDialog.setIndeterminate(true);
+
         }
 
         mProgressDialog.show();
@@ -210,13 +212,14 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
             case R.id.disconnect_button:
                 revokeAccess();
                 break;
+
         }
     }
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
         /* An unresolvable error has occurred and Google APIs (including Sign-In) will not be available. */
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        ProUtils.getInstance().log("onConnectionFailed execution");
 
     }
 
