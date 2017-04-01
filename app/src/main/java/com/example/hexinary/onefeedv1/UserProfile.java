@@ -44,21 +44,12 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_user_profile);
-        findViewById(R.id.google_provided_signin_button).setOnClickListener(this);
-        findViewById(R.id.google_provided_signout_button).setOnClickListener(this);
 
-        /* START configure_signin, Configure sign-in to request the user's ID, email address, and basic profile. ID and basic profile are included in DEFAULT_SIGN_IN. */
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        /* END configure_signin */
-
-        /* START build_client Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso. */
-        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-        /* END build_client */
-
-        /* START customize_button Set the dimensions of the sign-in button. */
-        SignInButton signInButton = (SignInButton) findViewById(R.id.google_provided_signin_button);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-        /* END customize_button */
+        /* Google Handler Setup */
+        this.googleHandler.setOnClicks();
+        this.googleHandler.configureGoogleSignInOptions();
+        this.googleHandler.configureMobileGoogleApiClient();
+        this.googleHandler.configureSignInButton();
 
     }
 
