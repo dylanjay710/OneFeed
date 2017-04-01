@@ -58,6 +58,7 @@ class GoogleHandler {
 
     }
 
+    public void checkUserBrandNew() {}
     /* Getters and Setters */
 
     public GoogleApiClient getMobileGoogleApiClient() {
@@ -74,7 +75,7 @@ class GoogleHandler {
 
     public String getTag() {
 
-        return this.getTag();
+        return this.TAG;
 
     }
 

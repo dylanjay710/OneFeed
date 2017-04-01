@@ -149,7 +149,21 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
             /* Signed in successfully, show authenticated UI. */
             GoogleSignInAccount acct = result.getSignInAccount();
             String displayName = acct.getDisplayName();
-            ProUtils.getInstance().log(displayName);
+            String email = acct.getEmail();
+            String familyName = acct.getFamilyName();
+            String givenName = acct.getGivenName();
+            String id = acct.getId();
+            String idToken = acct.getIdToken();
+            String serverAuthCode = acct.getServerAuthCode();
+
+            ProUtils.getInstance().log(
+                    "[+]Google Display Name: " + displayName + "\n" +
+                    "[+]Google Email: " + email + "\n" +
+                    "[+]Google Family Name: " + familyName + "\n" +
+                    "[+]Google Given Name: " + givenName + "\n" +
+                    "[+]Google id: " + id + "\n" +
+                    "[+]Google id token: " + idToken + "\n" +
+                    "[+]Google server auth code: " + serverAuthCode);
 
         } else {
 
