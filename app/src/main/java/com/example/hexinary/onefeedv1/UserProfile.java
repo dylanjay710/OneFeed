@@ -155,7 +155,7 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
             String id = acct.getId();
             String idToken = acct.getIdToken();
             String serverAuthCode = acct.getServerAuthCode();
-
+            
             ProUtils.getInstance().log(
                     "[+]Google Display Name: " + displayName + "\n" +
                     "[+]Google Email: " + email + "\n" +
