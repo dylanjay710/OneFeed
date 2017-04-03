@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hexinary.onefeedv1.CreateAccount">
+
+    <TextView
+        android:id="@+id/login_signup_page_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/login_signin_title"
+        android:layout_marginTop="25dp"
+        />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_provided_signin_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/login_signup_page_title"
+        android:layout_marginTop="25dp"
+        />
+
+
+</android.widget.RelativeLayout>

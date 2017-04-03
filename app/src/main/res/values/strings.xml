@@ -11,5 +11,8 @@
     <string name="next">Next</string>
     <string name="login_button_text">login</string>
     <string name="profile_header_text">Load in your social networks</string>
+    <string name="login_signin_title">Login or Sign Up</string>
+    <string name="facebook_app_id">1670514196587643</string>
+
 
 </resources>
