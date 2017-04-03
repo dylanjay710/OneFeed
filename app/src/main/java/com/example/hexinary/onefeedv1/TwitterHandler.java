@@ -1,16 +1,18 @@
 package com.example.hexinary.onefeedv1;
 
+import android.support.v7.app.AppCompatActivity;
+
 /**
  * Created by hexinary on 17-4-1.
  */
 
 class TwitterHandler {
 
-    private UserProfile userProfileInstance;
+    private AppCompatActivity activityInstance;
 
-    public TwitterHandler(UserProfile up) {
+    public TwitterHandler(AppCompatActivity activityInstance) {
 
-        this.userProfileInstance = up;
+        this.activityInstance = activityInstance;
 
     }
 }

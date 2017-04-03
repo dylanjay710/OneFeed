@@ -4,7 +4,10 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+
 public class CreateAccount extends AppCompatActivity {
+
+    private GoogleHandler googlehandler = new GoogleHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

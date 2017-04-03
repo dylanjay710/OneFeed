@@ -1,5 +1,8 @@
 package com.example.hexinary.onefeedv1;
 
+import android.support.v7.app.AppCompatActivity;
+
+import com.facebook.share.widget.LikeView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
@@ -11,22 +14,47 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 class GoogleHandler {
 
+    private CreateAccount createAccountInstance;
     private UserProfile userProfileInstance;
+
+    private Object<T> currentActivity;
+
     private GoogleSignInOptions gso;
     private GoogleApiClient mobileGoogleApiClient;
     private static final String TAG = "SigninActivity";
     private static final int RC_SIGN_IN = 9001;
 
-    public GoogleHandler(UserProfile up) {
+    public <T> GoogleHandler(T ca) {
 
-        this.userProfileInstance = up;
+        this.createAccountInstance = ca;
 
     }
 
-    public void setOnClicks() {
+    public GoogleLoginHandler(UserProfile up) {
 
-        this.userProfileInstance.findViewById(R.id.google_provided_signin_button).setOnClickListener(this.userProfileInstance);
-        this.userProfileInstance.findViewById(R.id.google_provided_signout_button).setOnClickListener(this.userProfileInstance);
+        this.userProfileInstance = up;
+    }
+
+    public UserProfile getUserProfileInstance() {
+        return this.userProfileInstance;
+    }
+
+    public CreateAccount getCreateAccountInstance() {
+        return this.createAccountInstance;
+    }
+
+    public AppCompatActivity getCurrentActivityInstance() {
+        if ( this.createAccountInstance == null )
+            return getCreateAccountInstance();
+        else
+            return getUserProfileInstance();
+
+    }
+
+    public void <T> setOnClicks(Object <T>) {
+
+        getCurrentActivityInstance().findViewById(R.id.google_provided_signin_button).setOnClickListener(Object <T>);
+        getCreateAccountInstance().findViewById(R.id.google_provided_signout_button).setOnClickListener(getCurrentActivityInstance());
 
     }
 
@@ -45,7 +73,7 @@ class GoogleHandler {
         if (this.mobileGoogleApiClient == null) {
 
             /* START build_client Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso. */
-            this.mobileGoogleApiClient = new GoogleApiClient.Builder(this.userProfileInstance).enableAutoManage(this.userProfileInstance, this.userProfileInstance).addApi(Auth.GOOGLE_SIGN_IN_API, this.gso).build();
+            this.mobileGoogleApiClient = new GoogleApiClient.Builder(this.activityInstance).enableAutoManage(this.activityInstance, this.activityInstance).addApi(Auth.GOOGLE_SIGN_IN_API, this.gso).build();
 
         }
     }
@@ -53,7 +81,7 @@ class GoogleHandler {
     public void configureGoogleSignInButton() {
 
         /* START customize_button Set the dimensions of the sign-in button. */
-        SignInButton signInButton = (SignInButton) this.userProfileInstance.findViewById(R.id.google_provided_signin_button);
+        SignInButton signInButton = (SignInButton) this.activityInstance.findViewById(R.id.google_provided_signin_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
 
     }

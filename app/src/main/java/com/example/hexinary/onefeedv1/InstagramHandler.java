@@ -6,11 +6,11 @@ package com.example.hexinary.onefeedv1;
 
 class InstagramHandler {
 
-    private UserProfile userProfileInstance;
+    private UserProfile activityInstance;
 
     public InstagramHandler(UserProfile up) {
 
-        this.userProfileInstance = up;
+        this.activityInstance = up;
 
     }
 }

@@ -1,16 +1,18 @@
 package com.example.hexinary.onefeedv1;
 
+import android.support.v7.app.AppCompatActivity;
+
 /**
  * Created by hexinary on 17-4-1.
  */
 
 class FacebookHandler {
 
-    private UserProfile userProfileInstance;
+    private AppCompatActivity activityInstance;
 
-    public FacebookHandler(UserProfile up) {
+    public FacebookHandler(AppCompatActivity activityInstance) {
 
-        this.userProfileInstance = up;
+        this.activityInstance = activityInstance;
 
     }
 }
