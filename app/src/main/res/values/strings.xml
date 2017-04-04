@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">OneFeed</string>
-    <string name="welcome_message">Welcome To OneFeed. Keep track of all social networks as if they were one</string>
+    <string name="welcome_message">Welcome To OneFeed. Combine all your social networks into one!</string>
+    <string name="login_signup_message">Login or Sign Up</string>
     <string name="onefeed_button">Create a OneFeed</string>
     <string name="create_account_header">Create an account to utilize the technology of the future</string>
     <string name="username_placeholder">username</string>
@@ -13,6 +14,7 @@
     <string name="profile_header_text">Load in your social networks</string>
     <string name="login_signin_title">Login or Sign Up</string>
     <string name="facebook_app_id">1670514196587643</string>
+    <string name="login_signup_text">Login or Sign Up</string>
 
 
 </resources>

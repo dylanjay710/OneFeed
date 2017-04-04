@@ -45,10 +45,10 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
     }
 
     public void configureGoogle() {
-        this.googleHandler.setOnClicks();
-        this.googleHandler.configureGoogleSignInOptions();
-        this.googleHandler.configureMobileGoogleApiClient();
-        this.googleHandler.configureGoogleSignInButton();
+        this.googleHandler.setOnClickListenerUserProfile();
+        this.googleHandler.configureGoogleSignInOptionsUserProfile();
+        this.googleHandler.configureMobileGoogleApiClientUserProfile();
+        this.googleHandler.configureGoogleSignInButtonUserProfile();
     }
 
     @Override
