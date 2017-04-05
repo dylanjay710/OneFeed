@@ -15,6 +15,7 @@
     <string name="login_signin_title">Login or Sign Up</string>
     <string name="facebook_app_id">1670514196587643</string>
     <string name="login_signup_text">Login or Sign Up</string>
+    <string name="google_signout_btn_text">sign out</string>
 
 
 </resources>

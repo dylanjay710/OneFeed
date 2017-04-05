@@ -42,41 +42,47 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ProUtils.getInstance().log("main activity onDestroy method being called");
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        ProUtils.getInstance().log("onStart method being called in MainActivity");
+        ProUtils.getInstance().log("main activity onStart method running");
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(this.googleHandler.getMobileGoogleApiClient());
 
-        if (opr.isDone()) {
-
-            ProUtils.getInstance().log("Checking user cached google credentials");
-
-            /* If the user's cached credentials are valid, the OptionalPendingResult will be "done" and the GoogleSignInResult will be available instantly. */
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-
-        } else {
-
-             /* If the user has not previously signed in on this device or the sign-in has expired, this asynchronous branch will attempt to sign in the user silently.  Cross-device single sign-on will occur in this branch. */
-            ProUtils.getInstance().log("User has expired credentials or is signing in for the first time");
-            showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
-                    handleSignInResult(googleSignInResult);
-                }
-
-            });
-
-        }
+//        if (opr.isDone()) {
+//
+//            ProUtils.getInstance().log("Checking user cached google credentials");
+//
+//            /* If the user's cached credentials are valid, the OptionalPendingResult will be "done" and the GoogleSignInResult will be available instantly. */
+//            GoogleSignInResult result = opr.get();
+//            handleSignInResult(result);
+//
+//        } else {
+//
+//             /* If the user has not previously signed in on this device or the sign-in has expired, this asynchronous branch will attempt to sign in the user silently.  Cross-device single sign-on will occur in this branch. */
+//            ProUtils.getInstance().log("User has expired credentials or is signing in for the first time");
+//            showProgressDialog();
+//            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+//
+//                @Override
+//                public void onResult(GoogleSignInResult googleSignInResult) {
+//                    hideProgressDialog();
+//                    handleSignInResult(googleSignInResult);
+//                }
+//
+//            });
+//
+//        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
+        ProUtils.getInstance().log("onActivityResult");
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == this.googleHandler.getRcSignIn()) {
@@ -86,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     /* Start signIn */
-    private void signIn() {
+    private void signInGoogle() {
 
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(this.googleHandler.getMobileGoogleApiClient());
         startActivityForResult(signInIntent, this.googleHandler.getRcSignIn());
@@ -94,21 +100,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     /* Start signOut */
-    private void signOut() {
+    public void signOutGoogle(View v) {
 
-        Auth.GoogleSignInApi.signOut(this.googleHandler.getMobileGoogleApiClient()).setResultCallback(
+        this.googleHandler.signOutGoolgeMainActivity();
 
-                new ResultCallback<Status>() {
-
-                    @Override
-                    public void onResult(Status status) {
-                        ProUtils.getInstance().log("signing out ahora");
-
-                        /* Update the UI for a user who is signed out */
-                        updateUI(false);
-
-                    }
-                });
     }
 
     /* Start revokeAccess */
@@ -132,10 +127,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void handleSignInResult(GoogleSignInResult result) {
 
         /* String concatenation means implicit casting ot booleans! */
+        ProUtils.getInstance().log("main activity handleSignInResultBeing called");
         ProUtils.getInstance().log("Login Success: " + result.isSuccess());
 
         if (result.isSuccess()) {
 
+            updateUI(true);
             /* Signed in successfully, show authenticated UI. */
             GoogleSignInAccount acct = result.getSignInAccount();
             String displayName = acct.getDisplayName();
@@ -183,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
-    private void updateUI(boolean signedIn) {
+    public void updateUI(boolean signedIn) {
 
         if (signedIn) {
 
@@ -192,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         } else {
 
-            mStatusTextView.setText("signed out");
+//            mStatusTextView.setText("signed out");
 
             findViewById(R.id.google_provided_signin_button).setVisibility(View.VISIBLE);
             findViewById(R.id.google_provided_signout_button).setVisibility(View.GONE);
@@ -202,15 +199,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onClick(View v) {
-
+        ProUtils.getInstance().log("main activty onClick running");
         switch (v.getId()) {
 
             case R.id.google_provided_signin_button:
-                signIn();
+                signInGoogle();
                 break;
 
             case R.id.google_provided_signout_button:
-                signOut();
+//                signOutGoogle();
                 break;
 
             case R.id.disconnect_button:

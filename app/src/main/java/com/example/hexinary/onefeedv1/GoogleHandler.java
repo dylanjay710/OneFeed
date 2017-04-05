@@ -7,6 +7,8 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 /**
  * Created by hexinary on 17-4-1.
@@ -28,6 +30,22 @@ class GoogleHandler {
 
     public GoogleHandler(UserProfile up) {
         this.userProfileInstance = up;
+    }
+
+    public void signOutGoolgeMainActivity() {
+        Auth.GoogleSignInApi.signOut(this.getMobileGoogleApiClient()).setResultCallback(
+
+                new ResultCallback<Status>() {
+
+                    @Override
+                    public void onResult(Status status) {
+                        ProUtils.getInstance().log("signing out ahora");
+
+                        /* Update the UI for a user who is signed out */
+                        mainActivityInstance.updateUI(false);
+
+                    }
+                });
     }
 
     public void setOnClickListenerMainActivity() {
