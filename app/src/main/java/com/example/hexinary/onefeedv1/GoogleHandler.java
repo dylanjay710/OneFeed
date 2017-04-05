@@ -100,6 +100,7 @@ class GoogleHandler {
 
         /* START customize_button Set the dimensions of the sign-in button. */
         SignInButton signInButton = (SignInButton) this.mainActivityInstance.findViewById(R.id.google_provided_signin_button);
+        signInButton.setMinimumHeight(50);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
 
     }

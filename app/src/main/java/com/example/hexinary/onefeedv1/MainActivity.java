@@ -3,12 +3,20 @@ package com.example.hexinary.onefeedv1;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -20,11 +28,14 @@ import com.google.android.gms.common.api.Status;
 //import com.facebook.FacebookSdk;
 
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class MainActivity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private GoogleHandler googleHandler = new GoogleHandler(this);
+    private FacebookHandler facebookHandler = new FacebookHandler(this);
+
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +43,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         setContentView(R.layout.activity_main);
 
         configureGoogle();
+        configureFacebook();
+    }
+
+    public void configureFacebook() {
+        this.facebookHandler.initializeCallBackManager();
+        this.facebookHandler.configureLoginButton(this);
+        this.facebookHandler.registerLoginCallback();
     }
 
     public void configureGoogle() {
@@ -40,6 +58,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         this.googleHandler.configureMobileGoogleApiClientMainActivity();
         this.googleHandler.configureGoogleSignInButtonMainActivity();
     }
+
+    public void checkUserLoggedInGoogle() {}
+
+    public void checkUserLoggedInFacebook() {}
 
     @Override
     protected void onDestroy() {
@@ -52,7 +74,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onStart();
         ProUtils.getInstance().log("main activity onStart method running");
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(this.googleHandler.getMobileGoogleApiClient());
+        updateUI(false);
 
+
+        /* this attempts to login users into their google account on activity start, */
 //        if (opr.isDone()) {
 //
 //            ProUtils.getInstance().log("Checking user cached google credentials");
@@ -86,8 +111,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == this.googleHandler.getRcSignIn()) {
+
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+
+        } else {
+
+            ProUtils.getInstance().log("Facebook onActivity request code: " + requestCode);
+            this.facebookHandler.getCallbackManager().onActivityResult(requestCode, resultCode, data);
+
         }
     }
 
@@ -103,6 +135,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void signOutGoogle(View v) {
 
         this.googleHandler.signOutGoolgeMainActivity();
+
+    }
+
+    public void signInFacebook() {
+
+        ProUtils.getInstance().log("Signing in with facebook");
+        this.facebookHandler.signIn();
 
     }
 
@@ -155,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         } else {
 
             ProUtils.getInstance().log("User has signed out of google");
+
         }
     }
 
@@ -204,14 +244,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             case R.id.google_provided_signin_button:
                 signInGoogle();
-                break;
-
-            case R.id.google_provided_signout_button:
-//                signOutGoogle();
-                break;
-
-            case R.id.disconnect_button:
-                revokeAccess();
                 break;
 
         }
