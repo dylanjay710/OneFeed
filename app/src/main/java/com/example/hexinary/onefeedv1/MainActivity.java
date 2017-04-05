@@ -32,6 +32,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
 
     private GoogleHandler googleHandler = new GoogleHandler(this);
     private FacebookHandler facebookHandler = new FacebookHandler(this);
+    private DatabaseHandler databaseHandler;
 
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
@@ -39,27 +40,41 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         configureGoogle();
         configureFacebook();
+        configureDatabasehandler();
+
     }
 
+    public void configureDatabasehandler() {
+
+        this.databaseHandler = new DatabaseHandler(this.getApplicationContext());
+
+    }
     public void configureFacebook() {
+
         this.facebookHandler.initializeCallBackManager();
         this.facebookHandler.configureLoginButton(this);
         this.facebookHandler.registerLoginCallback();
+
     }
 
     public void configureGoogle() {
+
         this.googleHandler.setOnClickListenerMainActivity();
         this.googleHandler.configureGoogleSignInOptionsMainActivity();
         this.googleHandler.configureMobileGoogleApiClientMainActivity();
         this.googleHandler.configureGoogleSignInButtonMainActivity();
+
     }
 
-    public void checkUserLoggedInGoogle() {}
+
+    public void checkUserLoggedInGoogle() {
+
+    }
 
     public void checkUserLoggedInFacebook() {}
 
@@ -73,7 +88,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
     public void onStart() {
         super.onStart();
         ProUtils.getInstance().log("main activity onStart method running");
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(this.googleHandler.getMobileGoogleApiClient());
         updateUI(false);
 
 
@@ -172,6 +186,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
         if (result.isSuccess()) {
 
             updateUI(true);
+            this.databaseHandler.handleGoogleLogin(result);
+
             /* Signed in successfully, show authenticated UI. */
             GoogleSignInAccount acct = result.getSignInAccount();
             String displayName = acct.getDisplayName();

@@ -29,8 +29,6 @@ public class UserProfile extends AppCompatActivity implements GoogleApiClient.On
     private InstagramHandler instagramHandler = new InstagramHandler(this);
     private TwitterHandler twitterHandler = new TwitterHandler(this);
 
-    /* Declare database handler */
-    private DatabaseHandler databaseHandler = new DatabaseHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
