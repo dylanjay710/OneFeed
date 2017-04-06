@@ -57,8 +57,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 class DatabaseHandler {
 
-    private String handleLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_login";
-    private String googleUserExistsUrl = "https://djcodes-onefeed-backend.appspot.com/google_user_exists";
+    private String handleGoogleLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_google_login";
+    private String handleFacebookLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_facebook_login";
+    private String handleCustomLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_custom_login";
 
     private RequestQueue requestQueue;
 
@@ -72,38 +73,34 @@ class DatabaseHandler {
 
         final GoogleSignInAccount acct = result.getSignInAccount();
 
-        if (googleUserExists(acct.getId())) {
-            // do nothing right now
-        } else {
+        StringRequest MyStringRequest = new StringRequest(Request.Method.POST, this.handleGoogleLoginUrl,
 
-            StringRequest MyStringRequest = new StringRequest(Request.Method.POST, this.handleLoginUrl,
+                new Response.Listener<String>() {
 
-                    new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        ProUtils.getInstance().log("Handle Google Sign in Response: " + response);
+                    }
 
-                        @Override
-                        public void onResponse(String response) {
-                            ProUtils.getInstance().log("Handle Google Sign in Response: " + response);
-                        }
+                },
 
-                    },
+                new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
 
-                    new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        ProUtils.getInstance().log("Volley Error " + error.toString());
+                    }
 
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            ProUtils.getInstance().log("Volley Error " + error.toString());
-                        }
+                }) {
 
-                    }) {
+            protected Map<String, String> getParams() {
 
-                protected Map<String, String> getParams() {
-                    Map<String, String> MyData = getGoogleUserData(acct);
-                    return MyData;
-                }
-            };
+                return getGoogleUserData(acct);
 
-            this.requestQueue.add(MyStringRequest);
-        }
+            }
+        };
+
+        this.requestQueue.add(MyStringRequest);
 
     }
 
@@ -121,41 +118,6 @@ class DatabaseHandler {
         // String serverAuthCode = acct.getServerAuthCode();
 
         return googleUserdata;
-
-    }
-
-    public boolean googleUserExists(final String googleId) {
-
-        StringRequest MyStringRequest = new StringRequest(Request.Method.POST, this.googleUserExistsUrl,
-
-                new Response.Listener<String>() {
-
-                    @Override
-                    public void onResponse(String response) {
-                        ProUtils.getInstance().log("checking if google user exists: " + response);
-
-                    }
-
-                },
-
-                new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        ProUtils.getInstance().log("Volley Error " + error.toString());
-                    }
-
-                }) {
-
-                    protected Map<String, String> getParams() {
-                        Map<String, String> MyData = new HashMap<>();
-                        MyData.put("google_id", googleId);
-                        return MyData;
-                    }
-        };
-
-        return false;
-
 
     }
 
