@@ -61,7 +61,7 @@ class FacebookHandler {
             public void onSuccess(LoginResult loginResult) {
 
                 ProUtils.getInstance().log("User has successfully logged in with facebook");
-
+                loadFacebookFeed();
             }
 
             @Override
