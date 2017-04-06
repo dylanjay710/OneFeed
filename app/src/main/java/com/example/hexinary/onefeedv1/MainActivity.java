@@ -43,6 +43,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         configureGoogle();
         configureFacebook();
         configureDatabasehandler();
@@ -54,11 +55,14 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
         this.databaseHandler = new DatabaseHandler(this.getApplicationContext());
 
     }
+
     public void configureFacebook() {
 
         this.facebookHandler.initializeCallBackManager();
         this.facebookHandler.configureLoginButton(this);
         this.facebookHandler.registerLoginCallback();
+        this.facebookHandler.configureFacebookAccessTokenTracker();
+        this.facebookHandler.configureFacebookProfileTracker();
 
     }
 
@@ -82,6 +86,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
     protected void onDestroy() {
         super.onDestroy();
         ProUtils.getInstance().log("main activity onDestroy method being called");
+        this.facebookHandler.stopTrackingAccessToken();
     }
 
     @Override
@@ -152,13 +157,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
 
     }
 
-    public void signInFacebook() {
-
-        ProUtils.getInstance().log("Signing in with facebook");
-        this.facebookHandler.signIn();
-
-    }
-
     /* Start revokeAccess */
     private void revokeAccess() {
 
@@ -186,26 +184,20 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
         if (result.isSuccess()) {
 
             updateUI(true);
+
             this.databaseHandler.handleGoogleLogin(result);
 
             /* Signed in successfully, show authenticated UI. */
-            GoogleSignInAccount acct = result.getSignInAccount();
-            String displayName = acct.getDisplayName();
-            String email = acct.getEmail();
-            String familyName = acct.getFamilyName();
-            String givenName = acct.getGivenName();
-            String id = acct.getId();
-            String idToken = acct.getIdToken();
-            String serverAuthCode = acct.getServerAuthCode();
+//            GoogleSignInAccount acct = result.getSignInAccount();
+//            String displayName = acct.getDisplayName();
+//            String email = acct.getEmail();
+//            String familyName = acct.getFamilyName();
+//            String givenName = acct.getGivenName();
+//            String id = acct.getId();
+//            String idToken = acct.getIdToken();
+//            String serverAuthCode = acct.getServerAuthCode();
 
-            ProUtils.getInstance().log(
-                    "[+]Google Display Name: " + displayName + "\n" +
-                            "[+]Google Email: " + email + "\n" +
-                            "[+]Google Family Name: " + familyName + "\n" +
-                            "[+]Google Given Name: " + givenName + "\n" +
-                            "[+]Google id: " + id + "\n" +
-                            "[+]Google id token: " + idToken + "\n" +
-                            "[+]Google server auth code: " + serverAuthCode);
+
 
         } else {
 
@@ -264,6 +256,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
 
         }
     }
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 

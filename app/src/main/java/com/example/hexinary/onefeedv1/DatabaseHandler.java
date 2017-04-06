@@ -104,6 +104,11 @@ class DatabaseHandler {
 
     }
 
+    public void handleFacebookLogin() {
+        ProUtils.getInstance().log("handling facebook login");
+
+    }
+
     public HashMap<String, String> getGoogleUserData(GoogleSignInAccount acct) {
 
         HashMap<String, String> googleUserdata = new HashMap<>();
@@ -118,10 +123,6 @@ class DatabaseHandler {
         // String serverAuthCode = acct.getServerAuthCode();
 
         return googleUserdata;
-
-    }
-
-    public void handleFacebookLogin() {
 
     }
 
