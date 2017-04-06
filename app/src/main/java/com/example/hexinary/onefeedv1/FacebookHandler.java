@@ -21,7 +21,15 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Created by hexinary on 17-4-1.
@@ -47,10 +55,6 @@ class FacebookHandler {
 
         this.userProfileInstance = up;
 
-    }
-
-    public void signIn() {
-        ProUtils.getInstance().log("signing in facebook");
     }
 
     public void registerLoginCallback() {
@@ -144,7 +148,24 @@ class FacebookHandler {
                     public void onCompleted(GraphResponse response) {
 
                         ProUtils.getInstance().log("Load facebook feed response");
-                        ProUtils.getInstance().log(response.toString());
+                        JSONObject fbResponse = response.getJSONObject();
+                        ProUtils.getInstance().log(fbResponse.toString());
+                        Map<String, String> fbResponseParsed = null;
+
+                        try {
+                            fbResponseParsed = parseJsonRecursively(fbResponse, new HashMap<String, String>());
+                            for (String key : fbResponseParsed.keySet()) {
+                                ProUtils.getInstance().log(key + "," + fbResponseParsed.get(key));
+                            }
+                        } catch (JSONException e) {
+
+                            ProUtils.getInstance().log("Error parsing fb json");
+                            e.printStackTrace();
+
+                        }
+
+
+
 
                     }
                 }
@@ -159,6 +180,40 @@ class FacebookHandler {
 
         this.accessTokenTracker.stopTracking();
 
+    }
+
+    public Map<String, String> parseJsonRecursively(JSONObject jsonObject, Map<String, String> map) throws JSONException {
+
+        Iterator<String> keys = jsonObject.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            String value = null;
+
+            try {
+                JSONObject next = jsonObject.getJSONObject(key);
+                parseJsonRecursively(next, map);
+
+            } catch (Exception e) {
+
+                if (jsonObject.get(key) instanceof JSONArray) {
+                    JSONArray jsonArray = (JSONArray) jsonObject.get(key);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        if (jsonArray.get(i) instanceof JSONObject) {
+                            parseJsonRecursively((JSONObject) jsonArray.get(i), map);
+                        } else if (jsonArray.get(i) instanceof String) {
+                            value = jsonObject.getString(key);
+                            map.put(key, value);
+                        }
+                    }
+                } else if (jsonObject.get(key) instanceof String) {
+                    value = jsonObject.getString(key);
+                    map.put(key, value);
+                }
+
+            }
+        }
+
+        return map;
     }
 
 }
