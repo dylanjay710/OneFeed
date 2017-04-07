@@ -87,6 +87,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
         super.onDestroy();
         ProUtils.getInstance().log("main activity onDestroy method being called");
         this.facebookHandler.stopTrackingAccessToken();
+        this.facebookHandler.logout();
     }
 
     @Override

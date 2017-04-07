@@ -233,4 +233,7 @@ class FacebookHandler {
         return map;
     }
 
+    public void logout() {
+        LoginManager.getInstance().logOut();
+    }
 }
