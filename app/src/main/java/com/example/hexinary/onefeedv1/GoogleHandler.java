@@ -21,6 +21,8 @@ class GoogleHandler {
 
     private GoogleSignInOptions gso;
     private GoogleApiClient mobileGoogleApiClient;
+    private boolean userSignedIn = false;
+
     private static final String TAG = "SigninActivity";
     private static final int RC_SIGN_IN = 9001;
 
@@ -33,19 +35,30 @@ class GoogleHandler {
     }
 
     public void signOutGoolgeMainActivity() {
-        Auth.GoogleSignInApi.signOut(this.getMobileGoogleApiClient()).setResultCallback(
 
-                new ResultCallback<Status>() {
+            try {
+                Auth.GoogleSignInApi.signOut(this.getMobileGoogleApiClient()).setResultCallback(
 
-                    @Override
-                    public void onResult(Status status) {
-                        ProUtils.getInstance().log("signing out ahora");
+                        new ResultCallback<Status>() {
 
-                        /* Update the UI for a user who is signed out */
-                        mainActivityInstance.updateUI(false);
+                            @Override
+                            public void onResult(Status status) {
+                                ProUtils.getInstance().log("signing out ahora");
 
-                    }
-                });
+                            /* Update the UI for a user who is signed out */
+                                mainActivityInstance.updateUI(false);
+                                setUserSignedIn(false);
+
+                            }
+                        });
+            } catch (Exception e) {
+                ProUtils.getInstance().log("" + e);
+            }
+
+    }
+
+    public void setUserSignedIn(boolean bool) {
+        this.userSignedIn = bool;
     }
 
     public void setOnClickListenerMainActivity() {

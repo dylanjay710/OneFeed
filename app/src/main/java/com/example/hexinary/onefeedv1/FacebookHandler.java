@@ -25,9 +25,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -44,6 +46,7 @@ class FacebookHandler {
     private ProfileTracker profileTracker;
     private CallbackManager callbackManager;
     private LoginButton loginButton;
+    private Map<String, List<String>> userFeed;
 
     public FacebookHandler(MainActivity ma) {
 
@@ -136,9 +139,11 @@ class FacebookHandler {
                     ProUtils.getInstance().log("Users facebook new updated profile is null. Whaaaa nooooo");
             }
         };
+
     }
 
     public void loadFacebookFeed(String url) {
+
 
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -152,22 +157,16 @@ class FacebookHandler {
                         ProUtils.getInstance().log("Load facebook feed response");
                         JSONObject fbResponse = response.getJSONObject();
                         ProUtils.getInstance().log(fbResponse.toString());
-                        Map<String, String> fbResponseParsed = null;
 
                         try {
 
-                            fbResponseParsed = parseJsonRecursively(fbResponse, new HashMap<String, String>());
-//                            for (String key : fbResponseParsed.keySet()) {
-//                                ProUtils.getInstance().log(key + "," + fbResponseParsed.get(key));
-////                                if (key.equals("next"))
-////                                    loadFacebookFeed(fbResponseParsed.get(key));
-//                            }
 
-                            if (fbResponseParsed.containsKey("next")) {
-                                loadFacebookFeed(fbResponseParsed.get("next"));
-                            }
+                            userFeed = parseJsonRecursively(fbResponse, new HashMap<String, List<String>>());
+                            ProUtils.getInstance().log("Showing user feed data");
 
-
+                            for (String key : userFeed.keySet())
+                                for (String element : userFeed.get(key))
+                                    ProUtils.getInstance().log(key + "," + element);
 
                         } catch (JSONException e) {
 
@@ -190,14 +189,19 @@ class FacebookHandler {
 
     }
 
-    public Map<String, String> parseJsonRecursively(JSONObject jsonObject, Map<String, String> map) throws JSONException {
+    public Map<String, List<String>> parseJsonRecursively(JSONObject jsonObject, Map<String, List<String>> map) throws JSONException {
 
         Iterator<String> keys = jsonObject.keys();
         while (keys.hasNext()) {
+
             String key = keys.next();
             String value = null;
 
+            if ( ! map.containsKey(key))
+                map.put(key, new ArrayList<String>());
+
             try {
+
                 JSONObject next = jsonObject.getJSONObject(key);
                 parseJsonRecursively(next, map);
 
@@ -206,25 +210,29 @@ class FacebookHandler {
                 if (jsonObject.get(key) instanceof JSONArray) {
 
                     JSONArray jsonArray = (JSONArray) jsonObject.get(key);
+
                     for (int i = 0; i < jsonArray.length(); i++) {
+
                         if (jsonArray.get(i) instanceof JSONObject) {
                             parseJsonRecursively((JSONObject) jsonArray.get(i), map);
+
                         } else if (jsonArray.get(i) instanceof String) {
                             value = (String) jsonArray.get(i);
                             ProUtils.getInstance().log(key +"," + value);
-                            map.put(key, value);
+                            map.get(key).add(value);
+
                         }
                     }
 
                 } else if (jsonObject.get(key) instanceof String) {
                     value = jsonObject.getString(key);
                     ProUtils.getInstance().log(key +"," + value);
-                    map.put(key, value);
+                    map.get(key).add(value);
 
                 } else if (jsonObject.get(key) instanceof Integer) {
                     value = jsonObject.get(key) + "";
                     ProUtils.getInstance().log(key +"," + value);
-                    map.put(key, value);
+                    map.get(key).add(value);
                 }
 
             }
@@ -235,5 +243,9 @@ class FacebookHandler {
 
     public void logout() {
         LoginManager.getInstance().logOut();
+    }
+
+    public void stopTrackingProfile() {
+        this.profileTracker.stopTracking();
     }
 }

@@ -2,6 +2,7 @@ package com.example.hexinary.onefeedv1;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -87,7 +89,9 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
         super.onDestroy();
         ProUtils.getInstance().log("main activity onDestroy method being called");
         this.facebookHandler.stopTrackingAccessToken();
+        this.facebookHandler.stopTrackingProfile();
         this.facebookHandler.logout();
+
     }
 
     @Override
@@ -186,6 +190,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
 
             updateUI(true);
 
+            this.googleHandler.setUserSignedIn(true);
             this.databaseHandler.handleGoogleLogin(result);
 
             /* Signed in successfully, show authenticated UI. */
@@ -203,7 +208,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
         } else {
 
             ProUtils.getInstance().log("User has signed out of google");
-
+            this.googleHandler.setUserSignedIn(false);
         }
     }
 
