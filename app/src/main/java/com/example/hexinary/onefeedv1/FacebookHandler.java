@@ -65,7 +65,7 @@ class FacebookHandler {
             public void onSuccess(LoginResult loginResult) {
 
                 ProUtils.getInstance().log("User has successfully logged in with facebook");
-                loadFacebookFeed();
+                loadFacebookFeed("/me/feed");
             }
 
             @Override
@@ -138,13 +138,15 @@ class FacebookHandler {
         };
     }
 
-    public void loadFacebookFeed() {
+    public void loadFacebookFeed(String url) {
+
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
-                "/me/feed",
+                url,
                 null,
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
+
                     public void onCompleted(GraphResponse response) {
 
                         ProUtils.getInstance().log("Load facebook feed response");
@@ -153,20 +155,26 @@ class FacebookHandler {
                         Map<String, String> fbResponseParsed = null;
 
                         try {
+
                             fbResponseParsed = parseJsonRecursively(fbResponse, new HashMap<String, String>());
-                            for (String key : fbResponseParsed.keySet()) {
-                                ProUtils.getInstance().log(key + "," + fbResponseParsed.get(key));
+//                            for (String key : fbResponseParsed.keySet()) {
+//                                ProUtils.getInstance().log(key + "," + fbResponseParsed.get(key));
+////                                if (key.equals("next"))
+////                                    loadFacebookFeed(fbResponseParsed.get(key));
+//                            }
+
+                            if (fbResponseParsed.containsKey("next")) {
+                                loadFacebookFeed(fbResponseParsed.get("next"));
                             }
+
+
+
                         } catch (JSONException e) {
 
                             ProUtils.getInstance().log("Error parsing fb json");
                             e.printStackTrace();
 
                         }
-
-
-
-
                     }
                 }
         ).executeAsync();
@@ -196,17 +204,26 @@ class FacebookHandler {
             } catch (Exception e) {
 
                 if (jsonObject.get(key) instanceof JSONArray) {
+
                     JSONArray jsonArray = (JSONArray) jsonObject.get(key);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         if (jsonArray.get(i) instanceof JSONObject) {
                             parseJsonRecursively((JSONObject) jsonArray.get(i), map);
                         } else if (jsonArray.get(i) instanceof String) {
-                            value = jsonObject.getString(key);
+                            value = (String) jsonArray.get(i);
+                            ProUtils.getInstance().log(key +"," + value);
                             map.put(key, value);
                         }
                     }
+
                 } else if (jsonObject.get(key) instanceof String) {
                     value = jsonObject.getString(key);
+                    ProUtils.getInstance().log(key +"," + value);
+                    map.put(key, value);
+
+                } else if (jsonObject.get(key) instanceof Integer) {
+                    value = jsonObject.get(key) + "";
+                    ProUtils.getInstance().log(key +"," + value);
                     map.put(key, value);
                 }
 
