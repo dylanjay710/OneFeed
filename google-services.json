@@ -1,38 +1,80 @@
 {
   "project_info": {
-    "project_number": "889659297667",
-    "project_id": "djcodes-onefeed-backend"
+    "project_number": "820541308697",
+    "project_id": "djcodes-onefeed"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:889659297667:android:9f6201e10fbddc7c",
+        "mobilesdk_app_id": "1:820541308697:android:423005bc5af258ab",
         "android_client_info": {
-          "package_name": "com.djcodes.onefeed"
+          "package_name": "com.example.hexinary.onefeed"
         }
       },
       "oauth_client": [
         {
-          "client_id": "889659297667-rn8im17cs8h34kfefbmrr0plc54mu9mu.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "889659297667-rp7jmpavg8v0jatmjqo0ddh462p7v874.apps.googleusercontent.com",
+          "client_id": "820541308697-50bvt7fskjc744icellmiedb53k4p4ln.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.djcodes.onefeed",
+            "package_name": "com.example.hexinary.onefeed",
             "certificate_hash": "e827d7fbf0749964b69e48894876b541bac7c63b"
           }
+        },
+        {
+          "client_id": "820541308697-oi0ekfi56jogsdsvdfc9omi1rumbe39i.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDcnvzlZdmu1bWILHcujaV8YVuDxLD8DSI"
+          "current_key": "AIzaSyDIM2yp7AoTBRqwMlrdGnLNuOOSqnR6Raw"
         }
       ],
       "services": {
         "analytics_service": {
           "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820541308697:android:e0e9f5203a73ad4a",
+        "android_client_info": {
+          "package_name": "com.example.hexinary.onefeedv1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "820541308697-0fnrbhqqh9ec9hk5h940h2e7qfunolee.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hexinary.onefeedv1",
+            "certificate_hash": "a1defae6335259d2cee976c19b03d2d178cb79a3"
+          }
+        },
+        {
+          "client_id": "820541308697-oi0ekfi56jogsdsvdfc9omi1rumbe39i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIM2yp7AoTBRqwMlrdGnLNuOOSqnR6Raw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-97156370-1"
+          }
         },
         "appinvite_service": {
           "status": 1,

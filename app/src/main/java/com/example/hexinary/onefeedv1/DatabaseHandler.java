@@ -55,25 +55,23 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by hexinary on 17-4-1.
  */
 
-class DatabaseHandler {
+public final class DatabaseHandler {
 
-    private String handleGoogleLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_google_login";
-    private String handleFacebookLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_facebook_login";
-    private String handleCustomLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_custom_login";
+    private static final String handleGoogleLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_google_login";
+    private static final String handleFacebookLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_facebook_login";
+    private static final String handleCustomLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_custom_login";
+    private static RequestQueue requestQueue;
 
-    private RequestQueue requestQueue;
 
-    public DatabaseHandler(Context context) {
-
-        this.requestQueue = Volley.newRequestQueue(context);
-
+    public static void configureRequestQueue(Context context) {
+        requestQueue = Volley.newRequestQueue(context);
     }
 
-    public void handleGoogleLogin(GoogleSignInResult result) {
+    public static void handleGoogleLogin(GoogleSignInResult result) {
 
         final GoogleSignInAccount acct = result.getSignInAccount();
 
-        StringRequest MyStringRequest = new StringRequest(Request.Method.POST, this.handleGoogleLoginUrl,
+        StringRequest MyStringRequest = new StringRequest(Request.Method.POST, handleGoogleLoginUrl,
 
                 new Response.Listener<String>() {
 
@@ -100,7 +98,7 @@ class DatabaseHandler {
             }
         };
 
-        this.requestQueue.add(MyStringRequest);
+        requestQueue.add(MyStringRequest);
 
     }
 
@@ -109,7 +107,7 @@ class DatabaseHandler {
 
     }
 
-    public HashMap<String, String> getGoogleUserData(GoogleSignInAccount acct) {
+    public static HashMap<String, String> getGoogleUserData(GoogleSignInAccount acct) {
 
         HashMap<String, String> googleUserdata = new HashMap<>();
 

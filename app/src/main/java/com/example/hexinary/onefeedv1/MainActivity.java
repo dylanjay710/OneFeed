@@ -21,8 +21,10 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -30,15 +32,14 @@ import com.google.android.gms.common.api.Status;
 //import com.facebook.FacebookSdk;
 
 
-public class MainActivity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
-
-    private GoogleHandler googleHandler = new GoogleHandler(this);
-    private FacebookHandler facebookHandler = new FacebookHandler(this);
-    private DatabaseHandler databaseHandler;
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
-
+    private GoogleSignInOptions gso;
+    private GoogleApiClient mobileGoogleApiClient;
+    private final String TAG = "SigninActivity";
+    private final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,49 +54,176 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
     }
 
     public void configureDatabasehandler() {
-
-        this.databaseHandler = new DatabaseHandler(this.getApplicationContext());
-
+        DatabaseHandler.configureRequestQueue(getApplicationContext());
     }
 
     public void configureFacebook() {
-
-        this.facebookHandler.initializeCallBackManager();
-        this.facebookHandler.configureLoginButton(this);
-        this.facebookHandler.registerLoginCallback();
-        this.facebookHandler.configureFacebookAccessTokenTracker();
-        this.facebookHandler.configureFacebookProfileTracker();
-
+        FacebookHandler.initializeCallBackManager();
+        FacebookHandler.configureLoginButton((LoginButton)findViewById(R.id.facebook_provided_signin_button));
+        FacebookHandler.registerLoginCallback();
+        FacebookHandler.configureFacebookAccessTokenTracker();
+        FacebookHandler.configureFacebookProfileTracker();
     }
 
     public void configureGoogle() {
+        configureGoogleButtonOnclickListener();
+        configureGoogleSignInButton();
+        configureGoogleSignInOptions();
+        configureMobileGoogleApiClient();
+    }
 
-        this.googleHandler.setOnClickListenerMainActivity();
-        this.googleHandler.configureGoogleSignInOptionsMainActivity();
-        this.googleHandler.configureMobileGoogleApiClientMainActivity();
-        this.googleHandler.configureGoogleSignInButtonMainActivity();
+    public void configureGoogleButtonOnclickListener() {
+        findViewById(R.id.google_provided_signin_button).setOnClickListener(this);
+    }
+
+    public void configureGoogleSignInButton() {
+
+        /* START customize_button Set the dimensions of the sign-in button. */
+        SignInButton signInButton = (SignInButton) findViewById(R.id.google_provided_signin_button);
+        signInButton.setMinimumHeight(50);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
 
     }
 
+    public void configureGoogleSignInOptions() {
+        if (gso == null) {
 
-    public void checkUserLoggedInGoogle() {
+            /* START configure sign in, Configure sign-in to request the user's ID, email address, and basic profile. ID and basic profile are included in DEFAULT_SIGN_IN. */
+            gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
+        }
     }
 
-    public void checkUserLoggedInFacebook() {}
+    public void configureMobileGoogleApiClient() {
+
+        if (mobileGoogleApiClient == null) {
+
+            /* START build_client Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso. */
+            mobileGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+
+        }
+    }
+
+    private void signInGoogle() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mobileGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    /* Start signOut */
+    public void signOutGoogle(View v) {
+        try {
+            Auth.GoogleSignInApi.signOut(mobileGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+
+                    @Override
+                    public void onResult(Status status) {
+                        ProUtils.getInstance().log("signing out ahora");
+
+                    }
+                }
+            );
+        } catch (Exception e) {
+            ProUtils.getInstance().log("Exception Encountered while signing out of google: " + e);
+        }
+    }
+
+    /* Start revokeAccess */
+    private void revokeGoogleAccess() {
+
+        Auth.GoogleSignInApi.revokeAccess(mobileGoogleApiClient).setResultCallback(
+
+            new ResultCallback<Status>() {
+
+                @Override
+                public void onResult(Status status) {
+
+                    updateUI(false);
+
+                }
+
+            }
+        );
+    }
+
+    /* Start handleSignInResult */
+    private void handleSignInResult(GoogleSignInResult result) {
+
+        /* String concatenation means implicit casting ot booleans! */
+        ProUtils.getInstance().log("main activity handleSignInResultBeing called");
+        ProUtils.getInstance().log("Login Success: " + result.isSuccess());
+
+        if (result.isSuccess()) {
+
+            updateUI(true);
+            DatabaseHandler.handleGoogleLogin(result);
+
+            /* Signed in successfully, show authenticated UI. */
+//            GoogleSignInAccount acct = result.getSignInAccount();
+//            String displayName = acct.getDisplayName();
+//            String email = acct.getEmail();
+//            String familyName = acct.getFamilyName();
+//            String givenName = acct.getGivenName();
+//            String id = acct.getId();
+//            String idToken = acct.getIdToken();
+//            String serverAuthCode = acct.getServerAuthCode();
+
+
+
+        } else {
+
+            ProUtils.getInstance().log("User has signed out of google");
+
+        }
+    }
+
+    private void showProgressDialog() {
+
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("loading...");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
+
+    public void updateUI(boolean signedIn) {
+
+        if (signedIn) {
+
+            findViewById(R.id.google_provided_signin_button).setVisibility(View.GONE);
+            findViewById(R.id.google_provided_signout_button).setVisibility(View.VISIBLE);
+
+        } else {
+
+//            mStatusTextView.setText("signed out");
+
+            findViewById(R.id.google_provided_signin_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.google_provided_signout_button).setVisibility(View.GONE);
+
+        }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         ProUtils.getInstance().log("main activity onDestroy method being called");
-        this.facebookHandler.stopTrackingAccessToken();
-        this.facebookHandler.stopTrackingProfile();
-        this.facebookHandler.logout();
+        FacebookHandler.stopTrackingAccessToken();
+        FacebookHandler.stopTrackingProfile();
+        FacebookHandler.logout();
 
     }
 
     @Override
     public void onStart() {
+
         super.onStart();
         ProUtils.getInstance().log("main activity onStart method running");
         updateUI(false);
@@ -134,119 +262,16 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.On
         ProUtils.getInstance().log("onActivityResult");
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == this.googleHandler.getRcSignIn()) {
+        if (requestCode == RC_SIGN_IN) {
 
+            ProUtils.getInstance().log("" + requestCode + "," + resultCode);
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
 
         } else {
 
             ProUtils.getInstance().log("Facebook onActivity request code: " + requestCode);
-            this.facebookHandler.getCallbackManager().onActivityResult(requestCode, resultCode, data);
-
-        }
-    }
-
-    /* Start signIn */
-    private void signInGoogle() {
-
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(this.googleHandler.getMobileGoogleApiClient());
-        startActivityForResult(signInIntent, this.googleHandler.getRcSignIn());
-
-    }
-
-    /* Start signOut */
-    public void signOutGoogle(View v) {
-
-        this.googleHandler.signOutGoolgeMainActivity();
-
-    }
-
-    /* Start revokeAccess */
-    private void revokeAccess() {
-
-        Auth.GoogleSignInApi.revokeAccess(this.googleHandler.getMobileGoogleApiClient()).setResultCallback(
-
-                new ResultCallback<Status>() {
-
-                    @Override
-                    public void onResult(Status status) {
-
-                        updateUI(false);
-
-                    }
-
-                });
-    }
-
-    /* Start handleSignInResult */
-    private void handleSignInResult(GoogleSignInResult result) {
-
-        /* String concatenation means implicit casting ot booleans! */
-        ProUtils.getInstance().log("main activity handleSignInResultBeing called");
-        ProUtils.getInstance().log("Login Success: " + result.isSuccess());
-
-        if (result.isSuccess()) {
-
-            updateUI(true);
-
-            this.googleHandler.setUserSignedIn(true);
-            this.databaseHandler.handleGoogleLogin(result);
-
-            /* Signed in successfully, show authenticated UI. */
-//            GoogleSignInAccount acct = result.getSignInAccount();
-//            String displayName = acct.getDisplayName();
-//            String email = acct.getEmail();
-//            String familyName = acct.getFamilyName();
-//            String givenName = acct.getGivenName();
-//            String id = acct.getId();
-//            String idToken = acct.getIdToken();
-//            String serverAuthCode = acct.getServerAuthCode();
-
-
-
-        } else {
-
-            ProUtils.getInstance().log("User has signed out of google");
-            this.googleHandler.setUserSignedIn(false);
-        }
-    }
-
-    private void showProgressDialog() {
-
-        if (mProgressDialog == null) {
-
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("loading...");
-            mProgressDialog.setIndeterminate(true);
-
-        }
-
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-
-            mProgressDialog.hide();
-
-        }
-    }
-
-    public void updateUI(boolean signedIn) {
-
-        if (signedIn) {
-
-            findViewById(R.id.google_provided_signin_button).setVisibility(View.GONE);
-            findViewById(R.id.google_provided_signout_button).setVisibility(View.VISIBLE);
-
-        } else {
-
-//            mStatusTextView.setText("signed out");
-
-            findViewById(R.id.google_provided_signin_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.google_provided_signout_button).setVisibility(View.GONE);
+            FacebookHandler.getCallbackManager().onActivityResult(requestCode, resultCode, data);
 
         }
     }

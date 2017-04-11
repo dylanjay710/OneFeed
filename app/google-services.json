@@ -8,7 +8,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:820541308697:android:423005bc5af258ab",
         "android_client_info": {
-          "package_name": "com.example.hexinary.onefeedv1"
+          "package_name": "com.example.hexinary.onefeed"
         }
       },
       "oauth_client": [
@@ -16,7 +16,7 @@
           "client_id": "820541308697-50bvt7fskjc744icellmiedb53k4p4ln.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.hexinary.onefeedv1",
+            "package_name": "com.example.hexinary.onefeed",
             "certificate_hash": "e827d7fbf0749964b69e48894876b541bac7c63b"
           }
         },
@@ -33,6 +33,48 @@
       "services": {
         "analytics_service": {
           "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820541308697:android:e0e9f5203a73ad4a",
+        "android_client_info": {
+          "package_name": "com.example.hexinary.onefeedv1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "820541308697-0fnrbhqqh9ec9hk5h940h2e7qfunolee.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hexinary.onefeedv1",
+            "certificate_hash": "a1defae6335259d2cee976c19b03d2d178cb79a3"
+          }
+        },
+        {
+          "client_id": "820541308697-oi0ekfi56jogsdsvdfc9omi1rumbe39i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIM2yp7AoTBRqwMlrdGnLNuOOSqnR6Raw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-97156370-1"
+          }
         },
         "appinvite_service": {
           "status": 1,

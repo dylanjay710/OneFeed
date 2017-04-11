@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -37,36 +38,22 @@ import java.util.StringTokenizer;
  * Created by hexinary on 17-4-1.
  */
 
-class FacebookHandler {
+public final class FacebookHandler {
 
-    private MainActivity mainActivityInstance;
-    private UserProfile userProfileInstance;
-    private AccessTokenTracker accessTokenTracker;
-    private AccessToken currentAccessToken;
-    private ProfileTracker profileTracker;
-    private CallbackManager callbackManager;
-    private LoginButton loginButton;
-    private Map<String, List<String>> userFeed;
 
-    public FacebookHandler(MainActivity ma) {
+    private static AccessTokenTracker accessTokenTracker;
+    private static AccessToken currentAccessToken;
+    private static ProfileTracker profileTracker;
+    private static CallbackManager callbackManager;
+    private static LoginButton loginButton;
+    private static LinkedHashMap<String, List<String>> userFeed;
 
-        this.mainActivityInstance = ma;
 
-    }
-
-    public FacebookHandler(UserProfile up) {
-
-        this.userProfileInstance = up;
-
-    }
-
-    public void registerLoginCallback() {
-
-        this.getLoginButton().registerCallback(this.getCallbackManager(), new FacebookCallback<LoginResult>() {
+    public static void registerLoginCallback() {
+        loginButton.registerCallback(getCallbackManager(), new FacebookCallback<LoginResult>() {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
-
                 ProUtils.getInstance().log("User has successfully logged in with facebook");
                 loadFacebookFeed("/me/feed");
             }
@@ -80,46 +67,34 @@ class FacebookHandler {
             public void onError(FacebookException exception) {
                 ProUtils.getInstance().log("Facebook Exception encountered: " + exception.toString());
             }
-
         });
     }
 
-    public void initializeCallBackManager() {
-
+    public static void initializeCallBackManager() {
         ProUtils.getInstance().log("Setting facebooks callback manager");
-        this.callbackManager = CallbackManager.Factory.create();
-
+        callbackManager = CallbackManager.Factory.create();
     }
 
-    public CallbackManager getCallbackManager() {
-        return this.callbackManager;
+
+    public static void configureLoginButton(LoginButton fbLoginButton) {
+        fbLoginButton.setReadPermissions(Arrays.asList("email", "public_profile", "user_posts"));
+        loginButton = fbLoginButton;
     }
 
-    public void configureLoginButton(MainActivity ma) {
-
-        this.loginButton = (LoginButton) ma.findViewById(R.id.facebook_provided_signin_button);
-        this.loginButton.setReadPermissions(Arrays.asList("email", "public_profile", "user_posts"));
-
-    }
-
-    public void configureFacebookAccessTokenTracker() {
-
-
-        this.accessTokenTracker = new AccessTokenTracker() {
+    public static void configureFacebookAccessTokenTracker() {
+        accessTokenTracker = new AccessTokenTracker() {
 
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {}
 
         };
-
-        this.currentAccessToken = AccessToken.getCurrentAccessToken();
+        currentAccessToken = AccessToken.getCurrentAccessToken();
         ProUtils.getInstance().log("setting new access token ");
-
     }
 
-    public void configureFacebookProfileTracker() {
+    public static void configureFacebookProfileTracker() {
 
-        this.profileTracker = new ProfileTracker() {
+        profileTracker = new ProfileTracker() {
 
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -142,14 +117,10 @@ class FacebookHandler {
 
     }
 
-    public void loadFacebookFeed(String url) {
+    public static void loadFacebookFeed(String url) {
 
 
-        new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                url,
-                null,
-                HttpMethod.GET,
+        new GraphRequest(AccessToken.getCurrentAccessToken(), url, null, HttpMethod.GET,
                 new GraphRequest.Callback() {
 
                     public void onCompleted(GraphResponse response) {
@@ -161,12 +132,10 @@ class FacebookHandler {
                         try {
 
 
-                            userFeed = parseJsonRecursively(fbResponse, new HashMap<String, List<String>>());
+                            userFeed = parseJsonRecursively(fbResponse, new LinkedHashMap<String, List<String>>());
                             ProUtils.getInstance().log("Showing user feed data");
 
-                            for (String key : userFeed.keySet())
-                                for (String element : userFeed.get(key))
-                                    ProUtils.getInstance().log(key + "," + element);
+                            ProUtils.getInstance().logUserFacebookFeed(userFeed);
 
                         } catch (JSONException e) {
 
@@ -179,17 +148,7 @@ class FacebookHandler {
         ).executeAsync();
     }
 
-    public LoginButton getLoginButton() {
-        return this.loginButton;
-    }
-
-    public void stopTrackingAccessToken() {
-
-        this.accessTokenTracker.stopTracking();
-
-    }
-
-    public Map<String, List<String>> parseJsonRecursively(JSONObject jsonObject, Map<String, List<String>> map) throws JSONException {
+    public static LinkedHashMap<String, List<String>> parseJsonRecursively(JSONObject jsonObject, LinkedHashMap<String, List<String>> map) throws JSONException {
 
         Iterator<String> keys = jsonObject.keys();
         while (keys.hasNext()) {
@@ -234,18 +193,24 @@ class FacebookHandler {
                     ProUtils.getInstance().log(key +"," + value);
                     map.get(key).add(value);
                 }
-
             }
         }
 
         return map;
     }
 
-    public void logout() {
+    public static void stopTrackingProfile() {
+        profileTracker.stopTracking();
+    }
+    public static void stopTrackingAccessToken() {
+        accessTokenTracker.stopTracking();
+    }
+    public static void logout() {
         LoginManager.getInstance().logOut();
     }
-
-    public void stopTrackingProfile() {
-        this.profileTracker.stopTracking();
+    public static CallbackManager getCallbackManager() {
+        return callbackManager;
     }
+
+
 }
