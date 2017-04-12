@@ -61,7 +61,7 @@ public final class DatabaseHandler {
     private static final String handleFacebookLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_facebook_login";
     private static final String handleCustomLoginUrl = "https://djcodes-onefeed-backend.appspot.com/handle_custom_login";
     private static RequestQueue requestQueue;
-
+    private static HashMap<String, String> currentProfileMap = new HashMap<>();
 
     public static void configureRequestQueue(Context context) {
         requestQueue = Volley.newRequestQueue(context);
@@ -124,4 +124,43 @@ public final class DatabaseHandler {
 
     }
 
+    public static void handleFacebookProfileChanged(String firstName, String lastName, String middleName, String name, String pictureUri, String linkUri, String fid) {
+
+        currentProfileMap.put("last_name", lastName);
+        currentProfileMap.put("middle_name", middleName);
+        currentProfileMap.put("name", name);
+        currentProfileMap.put("picture_uri", pictureUri);
+        currentProfileMap.put("link_uri", linkUri);
+        currentProfileMap.put("facebook_id", fid);
+        currentProfileMap.put("first_name", firstName);
+
+        StringRequest MyStringRequest = new StringRequest(Request.Method.POST, handleFacebookLoginUrl,
+
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        ProUtils.getInstance().log("[+] Handle Facebook update profile response: " + response);
+                    }
+
+                },
+
+                new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        ProUtils.getInstance().log("Volley Error " + error.toString());
+                    }
+
+                }) {
+
+            protected Map<String, String> getParams() {
+
+                return currentProfileMap;
+
+            }
+        };
+
+        requestQueue.add(MyStringRequest);
+    }
 }

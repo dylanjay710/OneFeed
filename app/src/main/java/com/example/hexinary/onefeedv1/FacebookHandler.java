@@ -2,6 +2,7 @@ package com.example.hexinary.onefeedv1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -25,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -56,6 +58,7 @@ public final class FacebookHandler {
             public void onSuccess(LoginResult loginResult) {
                 ProUtils.getInstance().log("User has successfully logged in with facebook");
                 loadFacebookFeed("/me/feed");
+
             }
 
             @Override
@@ -98,23 +101,74 @@ public final class FacebookHandler {
 
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                ProUtils.getInstance().log("Current facebook profile changed");
-                ProUtils.getInstance().log("showing old facebook profile");
+                ProUtils.getInstance().log("[+] Current facebook profile changed");
+                ProUtils.getInstance().log("[+] showing old facebook profile");
 
-                if (oldProfile != null)
+                if (oldProfile != null) {
                     ProUtils.getInstance().log(oldProfile.toString());
+                    String firstName = checkNull(oldProfile.getFirstName());
+                    String lastName = checkNull(oldProfile.getLastName());
+                    String middleName = checkNull(oldProfile.getMiddleName());
+                    String name = checkNull(oldProfile.getName());
+                    String pictureUri = checkNull(oldProfile.getProfilePictureUri(100, 100));
+                    String linkUri = checkNull(oldProfile.getLinkUri());
+                    String fid = checkNull(oldProfile.getId());
+
+                    /* Update the database with the updated profile data */
+                    DatabaseHandler.handleFacebookProfileChanged(firstName, lastName, middleName, name, pictureUri, linkUri, fid);
+
+                    ProUtils.getInstance().log("[+] Showing Old Facebook Profile Data");
+                    ProUtils.getInstance().logArgs(new ArrayList<String>(Arrays.asList(
+                            "[+] FirstName: " + checkNull(firstName),
+                            "[+] LaastName: " + checkNull(lastName),
+                            "[+] MiddleName: "+ checkNull(middleName),
+                            "[+] Name: " + checkNull(name),
+                            "[+] Picture uri: " + checkNull(pictureUri),
+                            "[+] LinkUri: " + checkNull(linkUri),
+                            "[+] Facebook Id: " + checkNull(fid)
+                    )));
+
+                }
                 else
-                    ProUtils.getInstance().log("Users facebook old profile is null");
+                    ProUtils.getInstance().log("[+] Users facebook old profile is null");
 
-                ProUtils.getInstance().log("showing new facebook profile");
-
-                if (currentProfile != null)
+                if (currentProfile != null) {
                     ProUtils.getInstance().log(currentProfile.toString());
+                    String firstName = checkNull(currentProfile.getFirstName());
+                    String lastName = checkNull(currentProfile.getLastName());
+                    String middleName = checkNull(currentProfile.getMiddleName());
+                    String name = checkNull(currentProfile.getName());
+                    String pictureUri = checkNull(currentProfile.getProfilePictureUri(100, 100));
+                    String linkUri = checkNull(currentProfile.getLinkUri());
+                    String fid = checkNull(currentProfile.getId());
+
+                    /* Update the database with the updated profile data */
+                    DatabaseHandler.handleFacebookProfileChanged(firstName, lastName, middleName, name, pictureUri, linkUri, fid);
+
+                    ProUtils.getInstance().log("[+] Showing New Facebook Profile Data");
+                    ProUtils.getInstance().logArgs(new ArrayList<String>(Arrays.asList(
+                            "[+] FirstName: " + (firstName),
+                            "[+] LaastName: " + (lastName),
+                            "[+] MiddleName: "+ (middleName),
+                            "[+] Name: " + (name),
+                            "[+] Picture uri: " + (pictureUri),
+                            "[+] LinkUri: " + (linkUri),
+                            "[+] Facebook Id: " + (fid)
+                    )));
+                }
                 else
-                    ProUtils.getInstance().log("Users facebook new updated profile is null. Whaaaa nooooo");
+                    ProUtils.getInstance().log("[+] Users facebook new updated profile is null. Whaaaa nooooo");
             }
+
         };
 
+    }
+
+    private static String checkNull(Object object) {
+        if (object == null)
+            return "null";
+        else
+            return (object instanceof String) ? (String) object : object.toString();
     }
 
     public static void loadFacebookFeed(String url) {
@@ -165,11 +219,9 @@ public final class FacebookHandler {
                 parseJsonRecursively(next, map);
 
             } catch (Exception e) {
-
                 if (jsonObject.get(key) instanceof JSONArray) {
 
                     JSONArray jsonArray = (JSONArray) jsonObject.get(key);
-
                     for (int i = 0; i < jsonArray.length(); i++) {
 
                         if (jsonArray.get(i) instanceof JSONObject) {
@@ -179,7 +231,6 @@ public final class FacebookHandler {
                             value = (String) jsonArray.get(i);
                             ProUtils.getInstance().log(key +"," + value);
                             map.get(key).add(value);
-
                         }
                     }
 
